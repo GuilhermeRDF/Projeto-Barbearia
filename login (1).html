@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Barbearia — Login</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --black: #0f0f0f;
+      --off-white: #f5f2ed;
+      --gold: #b8933a;
+      --gray: #6b6760;
+      --gray-light: #e8e4de;
+      --danger: #c0392b;
+      --radius: 4px;
+      --transition: 0.2s ease;
+    }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--black);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        repeating-linear-gradient(0deg, transparent, transparent 39px, rgba(255,255,255,0.03) 39px, rgba(255,255,255,0.03) 40px),
+        repeating-linear-gradient(90deg, transparent, transparent 39px, rgba(255,255,255,0.03) 39px, rgba(255,255,255,0.03) 40px);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .card {
+      position: relative;
+      z-index: 1;
+      background: var(--off-white);
+      border-radius: 2px;
+      width: 100%;
+      max-width: 380px;
+      padding: 2.5rem 2rem;
+      animation: fadeUp 0.5s ease both;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(16px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 2rem;
+    }
+
+    .logo-mark {
+      width: 36px;
+      height: 36px;
+      background: var(--black);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .logo-text {
+      font-family: 'Playfair Display', serif;
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--black);
+      letter-spacing: 0.01em;
+    }
+
+    .logo-sub {
+      font-size: 11px;
+      font-weight: 300;
+      color: var(--gray);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-top: 1px;
+    }
+
+    .tabs {
+      display: flex;
+      border-bottom: 1px solid var(--gray-light);
+      margin-bottom: 1.75rem;
+    }
+
+    .tab-btn {
+      flex: 1;
+      padding: 0.6rem 0;
+      background: none;
+      border: none;
+      border-bottom: 2px solid transparent;
+      margin-bottom: -1px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 13px;
+      font-weight: 400;
+      color: var(--gray);
+      cursor: pointer;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      transition: color var(--transition), border-color var(--transition);
+    }
+
+    .tab-btn.active {
+      color: var(--black);
+      font-weight: 500;
+      border-bottom-color: var(--gold);
+    }
+
+    .form { display: none; }
+    .form.active { display: block; animation: fadeIn 0.25s ease both; }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to   { opacity: 1; }
+    }
+
+    .field { margin-bottom: 1.1rem; }
+
+    label {
+      display: block;
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--gray);
+      margin-bottom: 6px;
+    }
+
+    input[type="text"],
+    input[type="tel"],
+    input[type="password"] {
+      width: 100%;
+      height: 42px;
+      background: #fff;
+      border: 1px solid var(--gray-light);
+      border-radius: var(--radius);
+      padding: 0 12px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 14px;
+      color: var(--black);
+      outline: none;
+      transition: border-color var(--transition), box-shadow var(--transition);
+      -webkit-appearance: none;
+    }
+
+    input:focus {
+      border-color: var(--gold);
+      box-shadow: 0 0 0 3px rgba(184,147,58,0.12);
+    }
+
+    input.error { border-color: var(--danger); }
+
+    .field-error {
+      font-size: 11px;
+      color: var(--danger);
+      margin-top: 4px;
+      display: none;
+    }
+
+    .field-error.show { display: block; }
+
+    .forgot {
+      text-align: right;
+      margin-top: -6px;
+      margin-bottom: 1.25rem;
+    }
+
+    .forgot a {
+      font-size: 12px;
+      color: var(--gray);
+      text-decoration: none;
+      transition: color var(--transition);
+    }
+
+    .forgot a:hover { color: var(--gold); }
+
+    .btn-primary {
+      width: 100%;
+      height: 44px;
+      background: var(--black);
+      color: #fff;
+      border: none;
+      border-radius: var(--radius);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: background var(--transition), transform 0.1s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .btn-primary:hover { background: #222; }
+    .btn-primary:active { transform: scale(0.99); }
+
+    .spinner {
+      display: none;
+      width: 16px;
+      height: 16px;
+      border: 2px solid rgba(255,255,255,0.3);
+      border-top-color: #fff;
+      border-radius: 50%;
+      animation: spin 0.6s linear infinite;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .btn-primary.loading .btn-label { display: none; }
+    .btn-primary.loading .spinner { display: block; }
+
+    .divider {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin: 1.25rem 0;
+    }
+
+    .divider-line { flex: 1; height: 1px; background: var(--gray-light); }
+    .divider-text { font-size: 11px; color: var(--gray); letter-spacing: 0.06em; }
+
+    .btn-sms {
+      width: 100%;
+      height: 42px;
+      background: #fff;
+      border: 1px solid var(--gray-light);
+      border-radius: var(--radius);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 13px;
+      color: var(--black);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: border-color var(--transition), background var(--transition);
+    }
+
+    .btn-sms:hover { border-color: var(--gold); background: #fdfaf5; }
+
+    .footer-note {
+      text-align: center;
+      font-size: 12px;
+      color: var(--gray);
+      margin-top: 1.5rem;
+    }
+
+    .footer-note button {
+      background: none;
+      border: none;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 12px;
+      color: var(--gold);
+      cursor: pointer;
+      font-weight: 500;
+      text-decoration: underline;
+      text-underline-offset: 2px;
+    }
+
+    .toast {
+      position: fixed;
+      bottom: 1.5rem;
+      left: 50%;
+      transform: translateX(-50%) translateY(20px);
+      background: #222;
+      color: #fff;
+      font-size: 13px;
+      padding: 10px 18px;
+      border-radius: var(--radius);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.25s ease, transform 0.25s ease;
+      white-space: nowrap;
+      z-index: 100;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+  </style>
+</head>
+<body>
+
+<div class="card">
+  <div class="logo">
+    <div class="logo-mark">
+      <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="9" cy="9" r="7" stroke="#b8933a" stroke-width="1.5"/>
+        <line x1="6" y1="9" x2="12" y2="9" stroke="#fff" stroke-width="1.5" stroke-linecap="round"/>
+        <line x1="9" y1="6" x2="9" y2="12" stroke="#fff" stroke-width="1.5" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <div>
+      <div class="logo-text">Barbearia</div>
+      <div class="logo-sub">Sistema de agendamentos</div>
+    </div>
+  </div>
+
+  <div class="tabs">
+    <button class="tab-btn active" onclick="switchTab('login')">Entrar</button>
+    <button class="tab-btn" onclick="switchTab('cadastro')">Cadastrar</button>
+  </div>
+
+  <!-- FORM LOGIN -->
+  <form class="form active" id="form-login" novalidate onsubmit="handleLogin(event)">
+    <div class="field">
+      <label for="login-tel">Telefone</label>
+      <input type="tel" id="login-tel" placeholder="(11) 99999-0000" maxlength="15" oninput="maskPhone(this)" />
+      <div class="field-error" id="err-login-tel">Informe um telefone válido</div>
+    </div>
+    <div class="field">
+      <label for="login-pass">Senha</label>
+      <input type="password" id="login-pass" placeholder="••••••••" />
+      <div class="field-error" id="err-login-pass">Informe sua senha</div>
+    </div>
+    <div class="forgot"><a href="#">Esqueci minha senha</a></div>
+    <button type="submit" class="btn-primary" id="btn-login">
+      <span class="btn-label">Entrar</span>
+      <div class="spinner"></div>
+    </button>
+    <div class="divider">
+      <div class="divider-line"></div>
+      <span class="divider-text">ou</span>
+      <div class="divider-line"></div>
+    </div>
+    <button type="button" class="btn-sms" onclick="showToast('SMS enviado! Verifique seu celular.')">
+      <svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect x="1" y="2" width="13" height="10" rx="2" stroke="currentColor" stroke-width="1.2"/>
+        <path d="M4 5.5h7M4 8.5h4" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
+      </svg>
+      Continuar com SMS
+    </button>
+    <p class="footer-note">Novo por aqui? <button type="button" onclick="switchTab('cadastro')">Crie sua conta</button></p>
+  </form>
+
+  <!-- FORM CADASTRO -->
+  <form class="form" id="form-cadastro" novalidate onsubmit="handleCadastro(event)">
+    <div class="field">
+      <label for="cad-nome">Nome completo</label>
+      <input type="text" id="cad-nome" placeholder="Seu nome" />
+      <div class="field-error" id="err-cad-nome">Informe seu nome</div>
+    </div>
+    <div class="field">
+      <label for="cad-tel">Telefone</label>
+      <input type="tel" id="cad-tel" placeholder="(11) 99999-0000" maxlength="15" oninput="maskPhone(this)" />
+      <div class="field-error" id="err-cad-tel">Informe um telefone válido</div>
+    </div>
+    <div class="field">
+      <label for="cad-pass">Senha</label>
+      <input type="password" id="cad-pass" placeholder="Mínimo 6 caracteres" />
+      <div class="field-error" id="err-cad-pass">Senha deve ter ao menos 6 caracteres</div>
+    </div>
+    <button type="submit" class="btn-primary" id="btn-cad" style="margin-top: 0.5rem">
+      <span class="btn-label">Criar conta</span>
+      <div class="spinner"></div>
+    </button>
+    <p class="footer-note">Já tem conta? <button type="button" onclick="switchTab('login')">Entrar</button></p>
+  </form>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+  function switchTab(tab) {
+    document.querySelectorAll('.tab-btn').forEach((b, i) => {
+      b.classList.toggle('active', (i === 0 && tab === 'login') || (i === 1 && tab === 'cadastro'));
+    });
+    document.getElementById('form-login').classList.toggle('active', tab === 'login');
+    document.getElementById('form-cadastro').classList.toggle('active', tab === 'cadastro');
+  }
+
+  function maskPhone(input) {
+    let v = input.value.replace(/\D/g, '').slice(0, 11);
+    if (v.length <= 10) {
+      v = v.replace(/(\d{2})(\d{4})(\d{0,4})/, '($1) $2-$3');
+    } else {
+      v = v.replace(/(\d{2})(\d{5})(\d{0,4})/, '($1) $2-$3');
+    }
+    input.value = v;
+  }
+
+  function showError(id, show) {
+    const el = document.getElementById(id);
+    const input = el.previousElementSibling;
+    el.classList.toggle('show', show);
+    input.classList.toggle('error', show);
+  }
+
+  function setLoading(btnId, loading) {
+    document.getElementById(btnId).classList.toggle('loading', loading);
+  }
+
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 3000);
+  }
+
+  function handleLogin(e) {
+    e.preventDefault();
+    const tel = document.getElementById('login-tel').value.replace(/\D/g, '');
+    const pass = document.getElementById('login-pass').value;
+
+    showError('err-login-tel', tel.length < 10);
+    showError('err-login-pass', !pass);
+    if (tel.length < 10 || !pass) return;
+
+    setLoading('btn-login', true);
+
+    // Integração com o backend FastAPI:
+    // fetch('/auth/login', {
+    //   method: 'POST',
+    //   headers: { 'Content-Type': 'application/json' },
+    //   body: JSON.stringify({ telefone: tel, senha: pass })
+    // })
+    // .then(r => r.json())
+    // .then(data => {
+    //   localStorage.setItem('token', data.access_token);
+    //   window.location.href = '/dashboard';
+    // })
+    // .catch(() => showToast('Erro ao fazer login'));
+
+    setTimeout(() => {
+      setLoading('btn-login', false);
+      showToast('Login realizado com sucesso!');
+    }, 1500);
+  }
+
+  function handleCadastro(e) {
+    e.preventDefault();
+    const nome = document.getElementById('cad-nome').value.trim();
+    const tel = document.getElementById('cad-tel').value.replace(/\D/g, '');
+    const pass = document.getElementById('cad-pass').value;
+
+    showError('err-cad-nome', !nome);
+    showError('err-cad-tel', tel.length < 10);
+    showError('err-cad-pass', pass.length < 6);
+    if (!nome || tel.length < 10 || pass.length < 6) return;
+
+    setLoading('btn-cad', true);
+
+    // Integração com o backend FastAPI:
+    // fetch('/clientes/', {
+    //   method: 'POST',
+    //   headers: { 'Content-Type': 'application/json' },
+    //   body: JSON.stringify({ nome, telefone: tel, senha: pass })
+    // })
+    // .then(r => r.json())
+    // .then(() => { showToast('Conta criada!'); switchTab('login'); })
+    // .catch(() => showToast('Erro ao criar conta'));
+
+    setTimeout(() => {
+      setLoading('btn-cad', false);
+      showToast('Conta criada! Bem-vindo.');
+      switchTab('login');
+    }, 1500);
+  }
+</script>
+</body>
+</html>
